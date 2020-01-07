@@ -1,0 +1,26 @@
+<div
+  class="expandable"
+  appExpandable
+  [collapsedHeight]="collapsedHeight"
+  [expandedHeight]="expandedHeight"
+  #expandable
+>
+  <div class="collapsed-content" [ngStyle]="{ height: collapsedHeight + 'px' }">
+    Collapsed View
+  </div>
+  <div
+    class="expanded-content"
+    [ngStyle]="{ height: expandedHeight - collapsedHeight + 'px' }"
+  >
+    <span *ngIf="expanding$ | async">Expanding...</span>
+    <span *ngIf="collapsing$ | async">Collapsing...</span>
+    <span *ngIf="expanded$ | async">Expanded View</span>
+  </div>
+</div>
+
+<div>
+  Status:
+  <span *ngIf="expanded$ | async">Expanded</span>
+  <span *ngIf="collapsed$ | async">Collapsed</span>
+  <span *ngIf="inProgress$ | async">In Progress</span>
+</div>

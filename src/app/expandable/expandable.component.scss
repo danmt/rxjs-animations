@@ -1,0 +1,13 @@
+.expandable {
+  width: 400px;
+  border: 1px solid black;
+  overflow: hidden;
+}
+
+.collapsed-content {
+  background-color: lightblue;
+}
+
+.expanded-content {
+  background-color: lightgreen;
+}
