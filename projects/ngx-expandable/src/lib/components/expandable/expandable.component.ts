@@ -9,7 +9,7 @@ import {
   switchMap,
   distinctUntilChanged
 } from 'rxjs/operators';
-import { RxjsAnimationsService } from '../../services/rxjs-animations/rxjs-animations.service';
+import { RxjsAnimationsService } from '../../services/rxjs-animations.service';
 import { State } from '../../interfaces/state.interface';
 import { Status } from '../../interfaces/status.interface';
 import { ToggleTypes } from '../../enums/toggle-types.enum';
