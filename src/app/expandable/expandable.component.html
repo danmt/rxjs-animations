@@ -2,19 +2,20 @@
   [collapsedHeight]="collapsedHeight"
   [expandedHeight]="expandedHeight"
   class="expandable"
+  #expandable
 >
   <app-item
     [collapsedHeight]="collapsedHeight"
     [expandedHeight]="expandedHeight"
-    [expanding]="expanding$ | async"
-    [collapsing]="collapsing$ | async"
-    [expanded]="expanded$ | async"
+    [expanding]="expandable.expanding$ | async"
+    [collapsing]="expandable.collapsing$ | async"
+    [expanded]="expandable.expanded$ | async"
   ></app-item>
 </ngx-expandable>
 
 <div>
   Status:
-  <span *ngIf="expanded$ | async">Expanded</span>
-  <span *ngIf="collapsed$ | async">Collapsed</span>
-  <span *ngIf="inProgress$ | async">In Progress</span>
+  <span *ngIf="expandable.expanded$ | async">Expanded</span>
+  <span *ngIf="expandable.collapsed$ | async">Collapsed</span>
+  <span *ngIf="expandable.inProgress$ | async">In Progress</span>
 </div>
