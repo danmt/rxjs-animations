@@ -119,6 +119,41 @@
           }
         }
       }
+    },
+    "ngx-expandable": {
+      "projectType": "library",
+      "root": "projects/ngx-expandable",
+      "sourceRoot": "projects/ngx-expandable/src",
+      "prefix": "ngx",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-expandable/tsconfig.lib.json",
+            "project": "projects/ngx-expandable/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-expandable/src/test.ts",
+            "tsConfig": "projects/ngx-expandable/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-expandable/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-expandable/tsconfig.lib.json",
+              "projects/ngx-expandable/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }},
   "defaultProject": "rxjs-animations"
 }

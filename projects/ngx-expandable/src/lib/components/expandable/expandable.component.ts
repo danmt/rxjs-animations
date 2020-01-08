@@ -1,120 +1,41 @@
-import {
-  Directive,
-  Input,
-  ElementRef,
-  OnInit,
-  Renderer2,
-  HostListener,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Subject, merge } from 'rxjs';
 import {
-  map,
-  switchMap,
-  withLatestFrom,
   scan,
   shareReplay,
   filter,
-  tap,
+  withLatestFrom,
+  map,
+  switchMap,
   distinctUntilChanged
 } from 'rxjs/operators';
-import { RxjsAnimationsService } from 'src/app/core/services/rxjs-animations/rxjs-animations.service';
+import { RxjsAnimationsService } from '../../services/rxjs-animations/rxjs-animations.service';
+import { State } from '../../interfaces/state.interface';
+import { Status } from '../../interfaces/status.interface';
+import { ToggleTypes } from '../../enums/toggle-types.enum';
+import { ActionTypes } from '../../enums/action-types.enum';
+import { Action } from '../../interfaces/action.interface';
+import { reducer } from '../../state/reducer';
+import { initialState } from '../../state/initial-state';
 
-enum ToggleTypes {
-  Expand = 'expand',
-  Collapse = 'collapse'
-}
-
-interface Status {
-  expanded: boolean;
-  collapsed: boolean;
-  inProgress: boolean;
-  toggleType: ToggleTypes;
-}
-
-interface State {
-  expanded: boolean;
-  collapsed: boolean;
-  distance: number;
-  inProgress: boolean;
-  toggleType: ToggleTypes;
-  collapsedHeight: number;
-  expandedHeight: number;
-}
-
-const initialState: State = {
-  expanded: false,
-  collapsed: false,
-  distance: 0,
-  inProgress: false,
-  toggleType: ToggleTypes.Collapse,
-  collapsedHeight: 0,
-  expandedHeight: 0
-};
-
-interface Action {
-  type: string;
-  payload?: any;
-}
-
-enum ActionTypes {
-  Init = 'init',
-  Toggle = 'toggle',
-  Move = 'move',
-  Moved = 'moved',
-  Expanded = 'expanded',
-  Collapsed = 'collapsed'
-}
-
-const reducer = (state: State, action: Action) => {
-  switch (action.type) {
-    case ActionTypes.Init:
-      return {
-        ...state,
-        ...action.payload
-      };
-    case ActionTypes.Toggle:
-      return {
-        ...state,
-        expanded: false,
-        collapsed: false,
-        inProgress: true,
-        toggleType:
-          state.toggleType === ToggleTypes.Expand
-            ? ToggleTypes.Collapse
-            : ToggleTypes.Expand
-      };
-    case ActionTypes.Move:
-      return {
-        ...state,
-        distance: action.payload
-      };
-    case ActionTypes.Moved:
-      return {
-        ...state,
-        ...(state.toggleType === ToggleTypes.Expand
-          ? action.payload === state.expandedHeight
-            ? { expanded: true, inProgress: false }
-            : {}
-          : action.payload === state.collapsedHeight
-          ? { collapsed: true, inProgress: false }
-          : {})
-      };
-    default:
-      return state;
-  }
-};
-
-@Directive({
-  selector: '[appExpandable]'
+@Component({
+  selector: 'ngx-expandable',
+  template: `
+    <div
+      ngxExpandable
+      (click)="clicked()"
+      [distance]="distance$ | async"
+      style="overflow: hidden"
+    >
+      <ng-content></ng-content>
+    </div>
+  `,
+  styles: []
 })
-export class ExpandableDirective implements OnInit {
+export class NgxExpandableComponent implements OnInit {
   @Input() collapsedHeight: number;
   @Input() expandedHeight: number;
   @Input() delayTime = 1000;
-  @Output() expanded = new EventEmitter();
-  @Output() collapsed = new EventEmitter();
 
   // State
   private readonly dispatcher = new Subject();
@@ -144,13 +65,6 @@ export class ExpandableDirective implements OnInit {
     ),
     map((distance: number) => ({ type: ActionTypes.Move, payload: distance }))
   );
-  private readonly move$ = this.actions$.pipe(
-    filter((action: Action) => action.type === ActionTypes.Move),
-    tap(({ payload }: Action) =>
-      this.renderer.setStyle(this.el.nativeElement, 'height', `${payload}px`)
-    ),
-    map(({ payload }: Action) => ({ type: 'moved', payload }))
-  );
 
   // Selectors
   readonly status$ = this.state$.pipe(
@@ -163,6 +77,11 @@ export class ExpandableDirective implements OnInit {
           collapsed
         } as Status)
     ),
+    shareReplay(1)
+  );
+  readonly distance$ = this.state$.pipe(
+    map(({ distance }: State) => distance),
+    distinctUntilChanged(),
     shareReplay(1)
   );
   readonly expanding$ = this.status$.pipe(
@@ -197,14 +116,10 @@ export class ExpandableDirective implements OnInit {
     shareReplay(1)
   );
 
-  constructor(
-    private renderer: Renderer2,
-    private el: ElementRef,
-    private animationsService: RxjsAnimationsService
-  ) {}
+  constructor(private animationsService: RxjsAnimationsService) {}
 
   ngOnInit() {
-    merge(this.init$, this.toggle$, this.move$).subscribe(this.dispatcher);
+    merge(this.init$, this.toggle$).subscribe(this.dispatcher);
 
     this.dispatcher.next({
       type: ActionTypes.Init,
@@ -216,7 +131,6 @@ export class ExpandableDirective implements OnInit {
     });
   }
 
-  @HostListener('click')
   clicked() {
     this.dispatcher.next({ type: ActionTypes.Toggle });
   }

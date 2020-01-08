@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ExpandableDirective } from '../shared/directives/expandable.directive';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { NgxExpandableComponent } from 'ngx-expandable';
 
 @Component({
   selector: 'app-expandable',
@@ -9,7 +8,7 @@ import { tap } from 'rxjs/operators';
   styleUrls: ['./expandable.component.scss']
 })
 export class ExpandableComponent implements OnInit {
-  @ViewChild(ExpandableDirective, { static: true }) expandable: any;
+  @ViewChild(NgxExpandableComponent, { static: true }) expandable: any;
   expanded$: Observable<boolean>;
   collapsed$: Observable<boolean>;
   inProgress$: Observable<boolean>;

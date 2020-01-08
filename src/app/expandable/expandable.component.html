@@ -1,22 +1,16 @@
-<div
-  class="expandable"
-  appExpandable
+<ngx-expandable
   [collapsedHeight]="collapsedHeight"
   [expandedHeight]="expandedHeight"
-  #expandable
+  class="expandable"
 >
-  <div class="collapsed-content" [ngStyle]="{ height: collapsedHeight + 'px' }">
-    Collapsed View
-  </div>
-  <div
-    class="expanded-content"
-    [ngStyle]="{ height: expandedHeight - collapsedHeight + 'px' }"
-  >
-    <span *ngIf="expanding$ | async">Expanding...</span>
-    <span *ngIf="collapsing$ | async">Collapsing...</span>
-    <span *ngIf="expanded$ | async">Expanded View</span>
-  </div>
-</div>
+  <app-item
+    [collapsedHeight]="collapsedHeight"
+    [expandedHeight]="expandedHeight"
+    [expanding]="expanding$ | async"
+    [collapsing]="collapsing$ | async"
+    [expanded]="expanded$ | async"
+  ></app-item>
+</ngx-expandable>
 
 <div>
   Status:
