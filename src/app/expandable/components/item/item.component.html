@@ -3,15 +3,14 @@
     class="collapsed-content"
     [ngStyle]="{ height: collapsedHeight + 'px' }"
   >
-    Collapsed View
+    {{ title }}
   </header>
 
   <div
     class="expanded-content"
     [ngStyle]="{ height: expandedHeight - collapsedHeight + 'px' }"
   >
-    <span *ngIf="expanding">Expanding...</span>
-    <span *ngIf="collapsing">Collapsing...</span>
-    <span *ngIf="expanded">Expanded View</span>
+    <span *ngIf="expanding || collapsing">...</span>
+    <span *ngIf="expanded">{{ description }}</span>
   </div>
 </article>
