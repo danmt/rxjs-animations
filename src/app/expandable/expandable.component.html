@@ -1,19 +1,21 @@
-<div *ngFor="let item of items">
-  <ngx-expandable
-    [collapsedHeight]="collapsedHeight"
-    [expandedHeight]="expandedHeight"
-    class="expandable"
-    #expandable
-  >
-    <app-item
-      [title]="item.title"
-      [description]="item.description"
+<ul>
+  <li *ngFor="let item of items">
+    <ngx-expandable
       [collapsedHeight]="collapsedHeight"
       [expandedHeight]="expandedHeight"
-      [expanding]="expandable.expanding$ | async"
-      [collapsing]="expandable.collapsing$ | async"
-      [expanded]="expandable.expanded$ | async"
-      [collapsed]="expandable.collapsed$ | async"
-    ></app-item>
-  </ngx-expandable>
-</div>
+      class="expandable"
+      #expandable
+    >
+      <app-item
+        [title]="item.title"
+        [description]="item.description"
+        [collapsedHeight]="collapsedHeight"
+        [expandedHeight]="expandedHeight"
+        [expanding]="expandable.expanding$ | async"
+        [collapsing]="expandable.collapsing$ | async"
+        [expanded]="expandable.expanded$ | async"
+        [collapsed]="expandable.collapsed$ | async"
+      ></app-item>
+    </ngx-expandable>
+  </li>
+</ul>

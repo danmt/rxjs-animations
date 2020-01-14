@@ -11,3 +11,13 @@
 .expanded-content {
   background-color: lightgreen;
 }
+
+ul {
+  padding: 0;
+  margin: 0;
+
+  li {
+    list-style: none;
+    margin-bottom: 0.5rem;
+  }
+}
